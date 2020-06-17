@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="card mx-4 my-4">
+        <div class="card-header">
+            <ul class="nav nav-pills card-header-pills">
+                <li class="nav-item m-1" *ngIf="!conectado">
+                    <input autocomplete="off" (keyup.enter)="conectar()" [(ngModel)]="mensaje.username" type="text" class="form-control" placeholder="Tu username" name="username">
+                </li>
+                <li class="nav-item m-1">
+                    <button type="button" class="btn btn-success" (click)="conectar()" *ngIf="!this.conectado" [disabled]="!mensaje.username">Conectar</button>
+                </li>
+                <li class="nav-item m-1">
+                    <button type="button" class="btn btn-warning" (click)="desconectar()" *ngIf="this.conectado">Cerrar chat</button>
+                </li>
+            </ul>
+        </div>
+
+        <div #scrollChat [scrollTop]="scrollChat.scrollHeight" class="card-body scroll" *ngIf="this.conectado">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item list-group-item-light" *ngFor="let mensaje of this.mensajes">
+                    <span *ngIf="mensaje.tipo == 'NUEVO_USUARIO'">{{mensaje.fecha | date:'shortTime'}} @ {{mensaje.texto}}: <span [ngStyle]="{'color': this.mensaje.color}">{{mensaje.username}}</span></span>
+                    <span *ngIf="mensaje.tipo == 'MENSAJE'">{{mensaje.fecha | date:'shortTime'}} <span [ngStyle]="{'color': this.mensaje.color}">{{mensaje.username}}</span> dice: <br> {{mensaje.texto}}</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-footer" *ngIf="this.conectado">
+            <form class="form-inline">
+                <div class="form-group m-3">
+                    <input (keyup)="escribiendoEvento()" [(ngModel)]="mensaje.texto" type="text" autocomplete="off" class="form-control" placeholder="Escribir mensaje..." name="texto">
+                </div>
+
+                <button type="submit" class="btn btn-primary" (click)="enviarMensaje()">Enviar</button>
+            </form>
+            <div>
+                {{escribiendo}}
+            </div>
+        </div>
+    </div>
+</div>
